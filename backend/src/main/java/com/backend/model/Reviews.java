@@ -1,6 +1,7 @@
 package com.backend.model;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.time.LocalDateTime;
 
@@ -11,12 +12,27 @@ public class Reviews {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long reviewId;
     private String reviewBody;
+
+    public Movie getMovie() {
+        return movie;
+    }
+
+    public void setMovie(Movie movie) {
+        this.movie = movie;
+    }
+
     private LocalDateTime createdTime;
     private LocalDateTime updatedTime;
 
+//    @ManyToOne
+//    @JoinColumn(name = "movie_review_id")
+//    private Movie movie;
+
     @ManyToOne
     @JoinColumn(name = "movie_review_id")
+    @JsonIgnore  // Add this annotation to break the recursion
     private Movie movie;
+
 
     public Reviews(Long reviewId, String reviewBody, LocalDateTime createdTime, LocalDateTime updatedTime, Movie movie) {
         this.reviewId = reviewId;

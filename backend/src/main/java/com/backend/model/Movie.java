@@ -1,5 +1,6 @@
 package com.backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -16,10 +17,24 @@ public class Movie {
     private String releaseDate;
     private String trailerLink;
     private String poster;
+
+    public List<Reviews> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Reviews> reviews) {
+        this.reviews = reviews;
+    }
+
+    @Column(length = 1000)
     private List<String> backdrops = new ArrayList<>();
     private List<String> genre = new ArrayList<>();
 
+//    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+//    private List<Reviews> reviews = new ArrayList<>();
+
     @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL)
+    @JsonIgnore  // Add this annotation to break the recursion
     private List<Reviews> reviews = new ArrayList<>();
 
 
@@ -117,5 +132,6 @@ public class Movie {
                 ", reviews=" + (reviews != null ? reviews.size() : "null") +
                 '}';
     }
+
 
 }
