@@ -1,6 +1,7 @@
 package com.backend.controllers;
 
 import com.backend.model.Movie;
+import com.backend.model.Reviews;
 import com.backend.repository.MovieRepository;
 import com.backend.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,15 @@ public class MovieController {
 
     @GetMapping("/api/all")
     ResponseEntity<List<Movie>> getAllMovies(){
+        System.out.println("/api/all Get Request Called");
         List<Movie> movies = movieService.allMovies();
         return new ResponseEntity<>(movies,HttpStatus.OK);
     }
 
     @PostMapping("/api/new")
     ResponseEntity<String> addNewMovie(@RequestBody Movie movie){
+        System.out.println("/api/new Post Request Called");
+
         try {
             movieService.saveMovie(movie);
             return new ResponseEntity<>("New Movie Added",HttpStatus.CREATED);
@@ -43,8 +47,21 @@ public class MovieController {
         return new ResponseEntity<>("Movies Saved",HttpStatus.OK);
     }
 
+    @GetMapping("/api/reviews/{imdbId}")
+    public ResponseEntity<List<Reviews>> getMovieReviewsByImdbId(@PathVariable String imdbId){
+        List<Reviews> reviews = movieService.getReviewsByImdbId(imdbId);
+
+//        if(reviews.isEmpty()){
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        }
+        return new ResponseEntity<>(reviews,HttpStatus.OK);
+    }
+
+
     @GetMapping("/api/{imdbId}")
     public ResponseEntity<Optional<Movie>> getMovieById(@PathVariable String imdbId) {
+        System.out.println("/api/{imdbId} Get Request Called");
+
         try {
             Optional<Movie> movie = movieService.getSingleMovieByImdbId(imdbId);
             if (movie.isPresent()) {
